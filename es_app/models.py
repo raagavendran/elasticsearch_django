@@ -1,6 +1,9 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from .search import BlogPostIndex
+
+
 # Create your models here.
 
 
@@ -9,3 +12,14 @@ class BlogPost(models.Model):
     posted_date = models.DateField(default=timezone.now)
     title = models.CharField(max_length=200)
     text = models.TextField(max_length=1000)
+
+def indexing(self):
+   obj = BlogPostIndex(
+      meta={'id': self.id},
+      author=self.author.username,
+      posted_date=self.posted_date,
+      title=self.title,
+      text=self.text
+   )
+   obj.save()
+   return obj.to_dict(include_meta=True)
